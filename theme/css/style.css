@@ -1,7 +1,12 @@
 body {
 	margin: 0px;
 	padding: 0px;
-	font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
+	font-family: 
+		"Arial",
+		"Microsoft YaHei",
+		"黑体",
+		"宋体",
+		sans-serif;
 	color: darkgray;
 	background-color: white;
 }
