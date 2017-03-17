@@ -137,3 +137,38 @@ Python 3.3+ 用户请使用：
 > $ python -m http.server
 
 现在就可以在浏览器中输入[http://localhost:8000/](http://localhost:8000/)查看博客了。
+
+### 关于主题模板
+Pelican提供了多样的主题供大家选择，大家可以在其GitHub的主题库中寻找自己喜欢的主题，然后下载或者clone到本地，保存到项目目录下。
+> [Pelican主题库](https://github.com/getpelican/pelican-themes)
+
+在生成博客的命令中，使用-t参数说明要使用的主题所在的目录（如果在生成的过程中未指定所使用的主题，生成器将使用其默认的主题）。
+> $ pelican content -s pelicanconfig.py -t .../themename/
+
+# GitHub Pages
+GitHub Pages是GitHub为用户提供的一种静态网站托管服务，没有空间限制而且可以绑定自己的域名（本博即托管于此）。
+> [GitHub Pages 首页](https://pages.github.com/)
+
+如果没有GitHub账号请首先注册一个账号，然后建立一个名为username.github.io的仓库，请注意将这里的username替换成你自己的用户名（重要）。
+
+完成了以这一步就可以在本地打开命令行，将该目录克隆下来：
+> $ git clone 仓库的git地址
+
+克隆完成后该目录就建立好了，但是目前目录为空，将之前生成在output目录下的所有文件拷贝到该目录下，后执行：
+> $ git add -A
+
+> $ git commit -m "Initial Commit"
+
+> $ git push
+
+这时访问http://username.github.io，应该就可以看到网站的内容了。
+
+### 绑定自定义域名
+首先进入GitHub刚才创建的仓库（静态站点）下，在setting中，将Custom domain设置成为你的域名。
+
+然后到域名服务商，添加一个A解析，地址为以下二选一：
+> 192.30.252.153
+> 192.30.252.154
+
+待到解析记录生效后，就可以用你的域名访问该博客了。更多关于自定义域名的设置请参考官方文档：
+> [Setting up an apex domain](https://help.github.com/articles/setting-up-an-apex-domain/)
