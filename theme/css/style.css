@@ -171,6 +171,7 @@ body {
 	color: #3A474F;
 }
 
+.disqus-comment-count,
 .article-title-span{
 	color: gray;
 	font-size: 14px;
