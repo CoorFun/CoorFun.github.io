@@ -3,6 +3,11 @@
 	height: auto;
 }
 
+.comments {
+	max-width: 760px;
+	height: auto;
+}
+
 a:link {  
 	color: #24292e;  
 	text-decoration: none;  
