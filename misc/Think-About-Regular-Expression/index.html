@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>CoorFang's Blog</title>
+    <!--for debugging
+    <meta http-equiv="cache-control" content="no-cache,no-store, must-revalidate" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />-->
+
+    <link rel="stylesheet" href=" http://coorfun.com/theme/css/style.css">
+    <link rel="stylesheet" href=" http://coorfun.com/theme/css/md.css">
+    <link rel="stylesheet" href=" http://coorfun.com/theme/css/font-awesome.css" type="text/css">
+    <link rel="stylesheet" href=" http://coorfun.com/theme/css/font-awesome.min.css" type="text/css">
+</head>
+
+<body>
+    <div id="container-top">
+        <div id="top-nav">
+            <nav class="function">
+                    <li><a href="http://coorfun.com/about.html">ABOUT ME</a></li>
+                    <li><a href="http://coorfun.com/cv.pdf">CV</a></li>
+                    <li><a href="http://coorfun.com/">简体中文</a></li>
+            </nav>
+            <nav class="social">
+                    <li><a href="https://github.com/CoorFun/">
+                    <i class="fa fa-github" aria-hidden="true"></i></a></li>
+                    <li><a href="http://weibo.com/1847796960/">
+                    <i class="fa fa-weibo" aria-hidden="true"></i></a></li>
+                    <li><a href="https://www.instagram.com/coorfang/">
+                    <i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+            </nav>
+        </div>
+    </div>
+    <div id="container-banner">
+        <div id="profile">
+            
+        </div>
+        <div id="subtitle">
+            <p>方可 / Coor Fang</p>
+            <p>Graduate @ISEP/ Hardwear Engineer @NXEZ</p>
+        </div>
+    </div>
+    <div id="container-body">
+        <div id="container-main">
+            <div id="main-nav">
+                <nav>
+                    <li><a href=""><i class="fa fa-search" aria-hidden="true"></i></a></li>
+                    <li ><a href=" http://coorfun.com">All</a></li>
+                    <li class="active"><a href=" http://coorfun.com/category/misc.html">Misc</a></li>
+                    <li><a href=" http://coorfun.com/category/project.html">Project</a></li>
+                    <li><a href=" http://coorfun.com/category/tech.html">Tech</a></li>
+                </nav>
+            </div>
+
+<div class="article">
+  <header>
+    <h2 class="article-title">说说正则表达式</h2>
+
+ 
+  </header>
+  <span class="article-title-span">
+  <i class="fa fa-calendar" aria-hidden="true"></i> Thu 16 February 2017
+  </span>
+
+  <div class="entry-content">
+    <h2>Regular Expression</h2>
+<p>正则表达式，英文为Regular Expression。它有点类似于C语言中的条件运算符(conditional operator)<code>? :</code>。</p>
+<blockquote>
+<p>例如： <code>max = (a&gt;b)?a:b</code> ，若条件符合，则max被赋予值a，反之则b。</p>
+</blockquote>
+<p>但虽然类似，这两者可完全不是一个概念。真正的正则表达式是能够使用单个字符串来描述、匹配某种特定句法规则的字符串。它常常被用于文本编辑器中，以便于用户查找和替换某种特定模式的文本。更准确的说，在编程语言中，它主要用于“操作字符串”。</p>
+<h2>Why</h2>
+<p>我的这个问题源自于今日在编写PHP代码时，需要检测用户输入的用户名是否合法。所设想的规则是：该用户名可以由字母、数字、汉字、下划线和减号组成，不能以数字开头，长度为6-24个字符，如输入内容全部为中文，则范围是3-12个（考虑一个中文字符占位两个英文字符）。这时如果想实现用户输入字符串的检测，则必须使用到正则表达式。</p>
+<p>接下来就把我写成的方法跟大家分析一下：</p>
+<div class="highlight"><pre><span></span><span class="x">publicfunctionis_username($username){</span>
+<span class="x">    $length= (strlen($username)+mb_strlen($username,&#39;utf8&#39;))/2;</span>
+<span class="x">  if(!preg_match(&quot;/^\b[a-zA-Z\x{4e00}-\x{9fa5}][a-zA-Z0-9_\-\x{4e00}-\x{9fa5}]{1,}$/u&quot;, $username)){</span>
+<span class="x">    #echo&quot;输入不合法&lt;br&gt;&quot;;</span>
+<span class="x">    $error= &quot;含有特殊字符&quot;；</span>
+<span class="x">    return$error;</span>
+
+<span class="x">  }elseif($length&lt;6 || $length&gt;24) {</span>
+<span class="x">      #echo&quot;当前长度： &quot;.$length.&quot;&lt;br&gt;&quot;;</span>
+<span class="x">      #echo&quot;长度不合法&lt;br&gt;&quot;;</span>
+<span class="x">      $error= &quot;长度不合法&quot;；</span>
+<span class="x">    return$error;</span>
+
+<span class="x">  }else{</span>
+<span class="x">      $error= &quot;&quot;；</span>
+<span class="x">    return$error;</span>
+<span class="x">  }</span>
+<span class="x">}</span>
+</pre></div>
+
+
+<h2>Explanation</h2>
+<p>该方法用于检测输入字符串是否符合规则，如果符合构成规则和长度规则，则返回错误为空，如果不合法，则返回相应的错误信息。这里字符串的长度通过分别用<code>strlen()</code>和<code>mb_strlen()</code>函数测量，然后将结果求和后除2，这么做的主要原因是在strlen函数中，utf-8编码规则的中文字符被当做3个英文字符，也就是说<code>strlen("一个")</code>该函数的返回值为6。而一般我们所使用的2个英文字符等价为1个汉字字符，该规则主要是针对使用了GBK2312编码方式，而现在UTF-8的编码方式已经普遍应用，为了不打破原有的计数规则，方便用户，这里首先使用strlen计算中英文共有多少个字符，此时的一个字母为1个字符，一个汉字为3个字符，而稍后我们使用<code>mb_strlen()</code>函数再次测量，这里请注意使用该函数的时候，第二个参数是以UTF-8的编码规则来计算，这样的话不论是中文还是英文，一个字母和一个汉字都被当做1个字符，也就是说<code>strlen("一个", 'utf8')</code>该函数的返回值为2。这样的话我们将两次的结果相加后，相当于1个汉字被计算成为了4个字符，一个字母被计算成为了2个字符，刚好是标准规则的2倍，所以除以2后得到经典意义上的“字符串长度”。</p>
+<h2>Conclusion</h2>
+<p>上面的关于字符串长度的计算方式的讨论算是题外话。这里我们回来看正则表达式。在正则表达式中， ^符号被用来标记字符串的开始位置，$符号被用来标记结束位置，其间的内容为匹配规则。由于正则表达式的内容非常之多，这里只解释本表达式的含义，其余的跟多关于正则表达式的用法，可以参考下表。在本文所涉及的规则中，^符号后首先出现的是\b，该转义字符标记了这里应该是一个单词的边界，由于该输入字符串的预设规则中不允许空格，所以可以将该字符串理解为一个很长的单词，标记出了单词的开始，也是说我们接下来想要匹配的规则就是输入字符串只能以数字、字母或者汉字为开头，那么在后面方括号中的内容即要求匹配字母a-z，A-Z，字符_，字符-，和以UTF8编码的汉字（不含符号）范围<code>\x{4e00}-\x{9fa5}</code>，这样就完成了首字母的匹配。接下来匹配剩余部分，剩余部分不需要标记开始位置，所以直接标记范围<code>[a-zA-Z0-9_\-\x{4e00}-\x{9fa5}]</code>，该范围比第一个范围多了数字0-9，在该范围的标记后标记匹配次数，{1,}的意思是至少要匹配一次，至多匹配到字符串结束。这样我们就完成了字符串规则的制定，然后通过调用PHP内部函数<code>preg_ match()</code>来执行匹配操作，如果匹配则返回值为真，反之则假。至此关于如何使用正则表达式判断输入是否正确就完成了。</p>
+<p>更多关于正则表达式的使用方法，可以参考正则表达式的维基百科：</p>
+<blockquote>
+<p><a href="https://zh.wikipedia.org/wiki/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F">正则表达式</a></p>
+</blockquote>
+  </div><!-- /.entry-content -->
+  
+    <div class="comments">
+      <h2>Comments !</h2>
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_shortname = 'coorfangs-blog';
+        var disqus_identifier = 'misc/Think-About-Regular-Expression/';
+        var disqus_url = ' http://coorfun.com/misc/Think-About-Regular-Expression/';
+        (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//coorfangs-blog.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the comments.</noscript>
+    </div>
+</div>
+            <div id="footer">
+                <p>
+                    <img src="https://img.shields.io/badge/Posts-5-brightgreen.svg">
+                    <!--
+                    <img src="https://img.shields.io/badge/Comments-25-red.svg">
+                    -->
+                </p>
+                <p>
+                    <img src="https://img.shields.io/badge/Hosted-GitHub-orange.svg">
+                    <img src="https://img.shields.io/badge/Power by-Pelican-green.svg">
+                    <img src="https://img.shields.io/badge/Photo service-Flickr-blue.svg">
+                </p>
+                <p>
+                    <a href="https://github.com/CoorFun/Pelican-Customize-Theme"><img src="https://img.shields.io/badge/Version-1.0-ff69b4.svg"></a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <!--Contents-->
+<script type="text/javascript">
+    var disqus_shortname = 'coorfangs-blog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>
