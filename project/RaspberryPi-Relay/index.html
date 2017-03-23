@@ -55,7 +55,7 @@
 
 <div class="article">
   <header>
-    <h2 class="article-title">Raspberry Pi网络继电器-模板测试文章</h2>
+    <h2 class="article-title">自制树莓派周边硬件模块之远程继电器组</h2>
 
  
   </header>
@@ -67,8 +67,24 @@
     <p>前些日子想能不能在公司或者床上（远离开关的地方）控制灯的开关呢。。于是想到上次买的树莓派正好派上用场，就用它做一个远程控制的多路开关吧。</p>
 <p>因为大学自学过dxp，还是电气专业于是第一个想到能不能自己画一个专用的模块接上去。</p>
 <p>经过无数次的论证，觉得光耦还没有必要，用三极管加1n4007做了驱动部分，采取物理分割隔离强弱电爬电效应等方式，第一个版本的板子出来啦。</p>
-<p><img alt="image" src="https://c1.staticflickr.com/4/3751/33289123391_ba467da589_c.jpg"></p>
-<p><img alt="image" src="https://c1.staticflickr.com/4/3780/33417304425_624d318f9a_c.jpg"></p>
+<p><img alt="image" src="http://coorfun.com/project/RaspberryPi-Relay/1.jpeg"></p>
+<p><img alt="image" src="http://coorfun.com/project/RaspberryPi-Relay/2.jpeg"></p>
+<p><img alt="image" src="http://coorfun.com/project/RaspberryPi-Relay/3.jpeg"></p>
+<p><img alt="image" src="http://coorfun.com/project/RaspberryPi-Relay/4.jpeg"></p>
+<p>考虑到继电器的强电端是交流是交流强电，为了防止焊盘氧化减小焊点阻抗所以把板子做了沉金工艺。</p>
+<p><img alt="image" src="http://coorfun.com/project/RaspberryPi-Relay/5.jpeg"></p>
+<p><img alt="image" src="http://coorfun.com/project/RaspberryPi-Relay/6.jpeg"></p>
+<h2>最终效果</h2>
+<p><img alt="image" src="http://coorfun.com/project/RaspberryPi-Relay/7.jpeg"></p>
+<p><img alt="image" src="http://coorfun.com/project/RaspberryPi-Relay/8.jpeg"></p>
+<p><img alt="image" src="http://coorfun.com/project/RaspberryPi-Relay/9.jpeg"></p>
+<p><img alt="image" src="http://coorfun.com/project/RaspberryPi-Relay/10.jpeg"></p>
+<p>双指示灯，开（绿），闭（红）。电源接通电源指示灯（蓝）亮。电源并两个1000uf电容防止电压波动导致继电器不能完全吸和。供电接口usb供电，因为线圈工作时候电流在400ma左右，所以推荐使用5v2a的充电头。接线柱的地方是可插拔的~方便使用了.</p>
+<p>这个继电器用的是欧姆龙的5v 5A250V 的大功率继电器，基本可以控制除了空调以外的所有家用电器，一些大功率的照明用具都没有问题。</p>
+<p>下面就似乎开始调试软件了，现在已经能用手机远程控制，但是还在进一步完善，新的信息我会更新给大家。</p>
+<p><img alt="image" src="http://coorfun.com/project/RaspberryPi-Relay/11.jpeg"></p>
+<p>最终效果还算满意，毕竟才是1.0版本 :D</p>
+<p>欢迎交流学习～我这里还剩下一些板子和全部材料也没用了有兴趣一起玩的欢迎联系我 B和B+还有很多开发板只要有GPIO都是能用的。</p>
   </div><!-- /.entry-content -->
   
     <div class="comments">
