@@ -53,33 +53,95 @@
 
 <div class="article">
   <header>
-    <h2 class="article-title">解决Mac升级Sierra后不能正常休眠的问题</h2>
+    <h2 class="article-title">在Mac OS下将镜像文件写入到USB盘/SD卡</h2>
 
  
   </header>
   <span class="article-title-span">
-  <i class="fa fa-calendar" aria-hidden="true"></i> Wed 22 March 2017
+  <i class="fa fa-calendar" aria-hidden="true"></i> Sun 24 September 2017
   </span>
 
   <div class="entry-content">
-    <h2>问题</h2>
-<p>升级Sierra快一个月了，经常每天早上翻开显示屏，发现下面的键盘竟然是热的。于是开始怀疑是不是Mac没有进入休眠模式，检查了设置中的电源设置后，发现一切正常，Mac应该在合上盖子的2分钟后进入休眠状态。于是百度之，发现很多从OS X升级到Sierra的用户都存在类似问题。经过排查，发现问题的出现是源于系统升级后电源管理设置参数的改变，导致触发了系统bug，于是Mac无法正常进入休眠状态。</p>
-<p>我的Mac版本如下</p>
-<p><img alt="image" src="http://coorfun.com/tech/Mac-Sierra-Sleep-Bug/version.png"></p>
-<p>如果在命令行输入</p>
+    <h2>概述</h2>
+<p>本文讲解如何使用Mac OS下的终端将镜像文件写入移动磁盘，可以用来在Mac下制作Windows的启动盘，也可以在Mac下给Raspberry Pi刷系统。</p>
+<h2>步骤</h2>
+<p>首先插入需要使用的U盘/SD卡，使用diskutil list命令查看当前已挂在的卷。</p>
 <blockquote>
-<p>$ pmset -g custom</p>
+<p>$ diskutil list</p>
 </blockquote>
-<p>我们会得到以下信息，请大家重点注意红框所选中区域中的信息</p>
-<p><img alt="image" src="http://coorfun.com/tech/Mac-Sierra-Sleep-Bug/terminal.jpeg"></p>
-<p>这张图中的信息为正常情况，在Battery Power设置下（使用电池模式），displaysleep是显示屏息屏时间，sleep是进入休眠时间，disksleep是磁盘进入休眠状态的时间。如果你的Mac不能够正常的进入休眠模式，那么一定是displaysleep的时间大于了sleep的时间，导致系统无法正常进入休眠。</p>
-<p>同理AC Power设置下（使用电源适配器）的三个参数，displaysleep，sleep和disksleep如果出现displaysleep值大于sleep值时，系统一样无法正常进入休眠模式。</p>
-<p>上图为已经恢复正常的参数，在之前我的displaysleep为2，sleep为1。</p>
-<p>据了解导致这个问题的原因是系统升级后原用户设置参数被修改，导致该问题。</p>
-<h2>解决方案</h2>
-<p>这三个参数无法在命令行直接修改，但我们可以进入设置中的电源设置，分别在电池模式和电源适配器模式下，将休眠时间重新修改至一个新值，关闭窗口，然后再次进入，再将其设置回我们所需要的配置即可（该过程刷新了系统参数文件）。此时回到命令行，输入<code>pmset -g custom</code>，观察一下displaysleep和sleep的参数，此时应该是相等的了。</p>
-<p><img alt="image" src="http://coorfun.com/tech/Mac-Sierra-Sleep-Bug/battery.png"></p>
-<p><img alt="image" src="http://coorfun.com/tech/Mac-Sierra-Sleep-Bug/AC.png"></p>
+<p>可以看到以下结果：</p>
+<p><img alt="图1" src="http://coorfun.com/tech/Flash-ISO-Under-MacOS/1.png"></p>
+<p>这里我们作为示范的是之前已经刷了Ubuntu系统的U盘，可以看到容量为7.7GB（标称8G），其所对应的设备文件为：/dev/disk4。</p>
+<p>使用diskutil unmountDisk卸载该设备（如果是SD卡可以使用命令diskutil unmount）</p>
+<blockquote>
+<p>$ diskutil unmountDisk</p>
+</blockquote>
+<p>命令会运行一小会，然后结果显示为：</p>
+<p><img alt="图2" src="http://coorfun.com/tech/Flash-ISO-Under-MacOS/2.png"></p>
+<p>再次运行diskutil list确认结果。</p>
+<blockquote>
+<p>$ diskutil list</p>
+</blockquote>
+<p>显示结果为：</p>
+<p><img alt="图3" src="http://coorfun.com/tech/Flash-ISO-Under-MacOS/3.png"></p>
+<p>现在就可已进入到镜像所在目录，用dd命令将镜像文件写入该磁盘了,注意需要管理员权限。</p>
+<blockquote>
+<p>$ sudo dd bs=10m if=Win_10_1703_Ent_64bit_USST_ENG.ISO of=/dev/disk4</p>
+</blockquote>
+<p>然后就是漫长的写入过程，这个过程是没有反馈的，直到出现写入成功或者失败。</p>
+<p>如果写入成功，将会出现如下结果：</p>
+<p><img alt="图4" src="http://coorfun.com/tech/Flash-ISO-Under-MacOS/4.png"></p>
+<h2>学习dd命令</h2>
+<h3>用途</h3>
+<p>用指定大小的块拷贝一个文件，并在拷贝的同时进行指定的转换。</p>
+<p>注意：指定数字的地方若以下列字符结尾则乘以相应的数字：b=512；c=1；k=1024；w=2</p>
+<h3>参数说明</h3>
+<blockquote>
+<ol>
+<li>
+<p>if=文件名：输入文件名，缺省为标准输入。即指定源文件。&lt; if=input file &gt;</p>
+</li>
+<li>
+<p>of=文件名：输出文件名，缺省为标准输出。即指定目的文件。&lt; of=output file &gt;</p>
+</li>
+<li>
+<p>ibs=bytes：一次读入bytes个字节，即指定一个块大小为bytes个字节。</p>
+</li>
+</ol>
+<p>obs=bytes：一次输出bytes个字节，即指定一个块大小为bytes个字节。</p>
+<p>bs=bytes：同时设置读入/输出的块大小为bytes个字节。</p>
+<ol>
+<li>
+<p>cbs=bytes：一次转换bytes个字节，即指定转换缓冲区大小。</p>
+</li>
+<li>
+<p>skip=blocks：从输入文件开头跳过blocks个块后再开始复制。</p>
+</li>
+<li>
+<p>seek=blocks：从输出文件开头跳过blocks个块后再开始复制。</p>
+</li>
+</ol>
+<p>注意：通常只用当输出文件是磁盘或磁带时才有效，即备份到磁盘或磁带时才有效。</p>
+<ol>
+<li>
+<p>count=blocks：仅拷贝blocks个块，块大小等于ibs指定的字节数。</p>
+</li>
+<li>
+<p>conv=conversion：用指定的参数转换文件。</p>
+</li>
+</ol>
+<p>ascii：转换ebcdic为ascii</p>
+<p>ebcdic：转换ascii为ebcdic</p>
+<p>ibm：转换ascii为alternate ebcdic</p>
+<p>block：把每一行转换为长度为cbs，不足部分用空格填充</p>
+<p>unblock：使每一行的长度都为cbs，不足部分用空格填充</p>
+<p>lcase：把大写字符转换为小写字符</p>
+<p>ucase：把小写字符转换为大写字符</p>
+<p>swab：交换输入的每对字节</p>
+<p>noerror：出错时不停止</p>
+<p>notrunc：不截短输出文件</p>
+<p>sync：将每个输入块填充到ibs个字节，不足部分用空（NUL）字符补齐。</p>
+</blockquote>
   </div><!-- /.entry-content -->
   
     <div class="comments">
@@ -87,8 +149,8 @@
       <div id="disqus_thread"></div>
       <script type="text/javascript">
         var disqus_shortname = 'coorfangs-blog';
-        var disqus_identifier = 'tech/Mac-Sierra-Sleep-Bug/';
-        var disqus_url = ' https://coorfun.com/tech/Mac-Sierra-Sleep-Bug/';
+        var disqus_identifier = 'tech/Flash-ISO-Under-MacOS/';
+        var disqus_url = ' https://coorfun.com/tech/Flash-ISO-Under-MacOS/';
         (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
         dsq.src = '//coorfangs-blog.disqus.com/embed.js';

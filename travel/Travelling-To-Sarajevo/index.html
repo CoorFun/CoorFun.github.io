@@ -46,40 +46,41 @@
                     <li ><a href=" https://coorfun.com">All</a></li>
                     <li><a href=" https://coorfun.com/category/misc.html">Misc</a></li>
                     <li><a href=" https://coorfun.com/category/project.html">Project</a></li>
-                    <li class="active"><a href=" https://coorfun.com/category/tech.html">Tech</a></li>
-                    <li><a href=" https://coorfun.com/category/travel.html">Travel</a></li>
+                    <li><a href=" https://coorfun.com/category/tech.html">Tech</a></li>
+                    <li class="active"><a href=" https://coorfun.com/category/travel.html">Travel</a></li>
                 </nav>
             </div>
 
 <div class="article">
   <header>
-    <h2 class="article-title">解决Mac升级Sierra后不能正常休眠的问题</h2>
+    <h2 class="article-title">巴尔干明珠-萨拉热窝</h2>
 
  
   </header>
   <span class="article-title-span">
-  <i class="fa fa-calendar" aria-hidden="true"></i> Wed 22 March 2017
+  <i class="fa fa-calendar" aria-hidden="true"></i> Fri 05 May 2017
   </span>
 
   <div class="entry-content">
-    <h2>问题</h2>
-<p>升级Sierra快一个月了，经常每天早上翻开显示屏，发现下面的键盘竟然是热的。于是开始怀疑是不是Mac没有进入休眠模式，检查了设置中的电源设置后，发现一切正常，Mac应该在合上盖子的2分钟后进入休眠状态。于是百度之，发现很多从OS X升级到Sierra的用户都存在类似问题。经过排查，发现问题的出现是源于系统升级后电源管理设置参数的改变，导致触发了系统bug，于是Mac无法正常进入休眠状态。</p>
-<p>我的Mac版本如下</p>
-<p><img alt="image" src="http://coorfun.com/tech/Mac-Sierra-Sleep-Bug/version.png"></p>
-<p>如果在命令行输入</p>
+    <h2>序</h2>
+<p>正式出发前，我曾向身边的几个朋友提起，告诉他们我的假期要去萨拉热窝了，得到的回应大多是在询问诸如“萨拉热窝在哪？”这样的问题；极少数对历史感兴趣的朋友知道，这里是第一次世界大战的策源地，但也仅仅如此；来自老一辈人的回应，则大多是关于《瓦尔特保卫萨拉热窝》影片的记忆。</p>
+<p>的确，对于今天生活在欧亚大陆最东边的我们来说，萨拉热窝离我们太远了，远到我们中的很多连它在哪里都不知道，即使能够联想起中学历史课本中的只言片语。坦诚地讲，小时候的我听到这个名字，也会觉得非常的奇怪，听起来像是一个水深火热的穷山窝子。</p>
+<p>直到多年后的某一天，当我看到费尔哈迪大街建筑上的弹孔、当我爬上环绕着的萨拉热窝的狄那里克山、当我看见1984年南斯拉夫冬奥会海报、当我品尝着价格低廉的伊斯兰美食的时候，我发现曾经对这座城市名字的奇葩解读，似乎还有一点贴切。</p>
+<h2>巴尔干半岛与萨拉热窝</h2>
+<p>提到萨拉热窝，就不得不先说一说巴尔干半岛。</p>
+<p>地理上对于巴尔干半岛的定义是位于亚德里亚海和黑海之间的陆地，它坐落于欧洲大陆的东南角。</p>
 <blockquote>
-<p>$ pmset -g custom</p>
+<p><img alt="image" src="http://coorfun.com/Travel/Travelling-To-Sarajevo/1.jpg">
+巴尔干半岛及萨拉热窝地理位置</p>
 </blockquote>
-<p>我们会得到以下信息，请大家重点注意红框所选中区域中的信息</p>
-<p><img alt="image" src="http://coorfun.com/tech/Mac-Sierra-Sleep-Bug/terminal.jpeg"></p>
-<p>这张图中的信息为正常情况，在Battery Power设置下（使用电池模式），displaysleep是显示屏息屏时间，sleep是进入休眠时间，disksleep是磁盘进入休眠状态的时间。如果你的Mac不能够正常的进入休眠模式，那么一定是displaysleep的时间大于了sleep的时间，导致系统无法正常进入休眠。</p>
-<p>同理AC Power设置下（使用电源适配器）的三个参数，displaysleep，sleep和disksleep如果出现displaysleep值大于sleep值时，系统一样无法正常进入休眠模式。</p>
-<p>上图为已经恢复正常的参数，在之前我的displaysleep为2，sleep为1。</p>
-<p>据了解导致这个问题的原因是系统升级后原用户设置参数被修改，导致该问题。</p>
-<h2>解决方案</h2>
-<p>这三个参数无法在命令行直接修改，但我们可以进入设置中的电源设置，分别在电池模式和电源适配器模式下，将休眠时间重新修改至一个新值，关闭窗口，然后再次进入，再将其设置回我们所需要的配置即可（该过程刷新了系统参数文件）。此时回到命令行，输入<code>pmset -g custom</code>，观察一下displaysleep和sleep的参数，此时应该是相等的了。</p>
-<p><img alt="image" src="http://coorfun.com/tech/Mac-Sierra-Sleep-Bug/battery.png"></p>
-<p><img alt="image" src="http://coorfun.com/tech/Mac-Sierra-Sleep-Bug/AC.png"></p>
+<p>不难看出，从地理位置上来讲巴尔干半岛可以算是传统西欧强国和西亚强国之间的缓冲地带，掌握地中海出海口和欧亚陆路交通命脉，地缘政治重要性非同一般。公元前200年（在中国历史上是西汉王朝建立的时期）后，这里曾分别被罗马帝国、东罗马帝国（拜占庭）、柔然人（继匈奴、鲜卑后崛起的中亚草原民族）、奥斯曼土耳帝国等统治。进入19世纪以后，奥地利帝国和沙俄帝国都对该地区充满渴求，以便能够获得亚得里亚海的统治权和地中海的出海口，而与此同时，该地区是英法通往印度洋和远东大陆的咽喉要道，因此巴尔干成为了英法俄奥大国激烈争夺的地区，也自此该地区被冠名“欧洲火药库”。</p>
+<p>复杂的历史渊源造成的直后果就是充斥半岛的高度复杂的民族性问题，进而导致的就是极端民族主义，最后成为恐怖主义。</p>
+<p>1914年6月28日，萨拉热窝拉丁桥边的一声枪响，奥匈帝国的储君“费迪南大公”倒在血泊之中，第一次世界大战自此爆发。</p>
+<p>行凶者是一名塞尔维亚极端民族主义青年，因为反对奥匈帝国1908年对波斯尼亚和黑塞哥维那的强行吞并，公然在塞尔维亚国庆日当天，刺杀了正在萨拉热窝视察的奥匈帝国王子。</p>
+<p>这一枪，改变了全世界历史。</p>
+<p>20世纪的战后，由于巴尔干地区的</p>
+<h2>出发</h2>
+<h2></h2>
   </div><!-- /.entry-content -->
   
     <div class="comments">
@@ -87,8 +88,8 @@
       <div id="disqus_thread"></div>
       <script type="text/javascript">
         var disqus_shortname = 'coorfangs-blog';
-        var disqus_identifier = 'tech/Mac-Sierra-Sleep-Bug/';
-        var disqus_url = ' https://coorfun.com/tech/Mac-Sierra-Sleep-Bug/';
+        var disqus_identifier = 'travel/Travelling-To-Sarajevo/';
+        var disqus_url = ' https://coorfun.com/travel/Travelling-To-Sarajevo/';
         (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
         dsq.src = '//coorfangs-blog.disqus.com/embed.js';
