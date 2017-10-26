@@ -76,23 +76,29 @@
 <blockquote>
 <p>$ tightvncserver</p>
 </blockquote>
-<p>`
-pi@raspberrypi:~ $ tightvncserver</p>
-<p>New 'X' desktop is raspberrypi:3</p>
-<p>Starting applications specified in /home/pi/.vnc/xstartup
+<div class="highlight"><pre><span></span>pi@raspberrypi:~ $ tightvncserver
+
+New &#39;X&#39; desktop is raspberrypi:3
+
+Starting applications specified in /home/pi/.vnc/xstartup
 Log file is /home/pi/.vnc/raspberrypi:3.log
-`</p>
+</pre></div>
+
+
 <p>运行结果如图所示，rasoberrypi:3表示当前开启了第三个会话，在使用vnc客户端连接时，需要此参数。默认情况下会话编号会从1开始，然后每次运行会依次增加。因为我已经开启了2个，所以这次运行就是3。</p>
 <p>如果想要为远程桌面设置指定的分辨率和显示参数，可以通过如下命令(x表示希望使用的会话编号)：</p>
 <blockquote>
 <p>$ vncserver:x -geometry 1200×600 -depth 16 -pixelformat rgb565</p>
 </blockquote>
-<p>`
-pi@raspberrypi:~ $ vncserver :2 -geometry 1366x768 -depth 16 -pixelformat rgb565</p>
-<p>New 'X' desktop is raspberrypi:2</p>
-<p>Starting applications specified in /home/pi/.vnc/xstartup
+<div class="highlight"><pre><span></span>pi@raspberrypi:~ $ vncserver :2 -geometry 1366x768 -depth 16 -pixelformat rgb565
+
+New &#39;X&#39; desktop is raspberrypi:2
+
+Starting applications specified in /home/pi/.vnc/xstartup
 Log file is /home/pi/.vnc/raspberrypi:2.log
-`</p>
+</pre></div>
+
+
 <h2>不同系统的VNC客户端</h2>
 <ul>
 <li>Windows 有自带的远程桌面访问功能，直接访问即可。</li>
@@ -122,7 +128,7 @@ Log file is /home/pi/.vnc/raspberrypi:2.log
 </div>
             <div id="footer">
                 <p>
-                    <img src="https://img.shields.io/badge/Posts-9-brightgreen.svg">
+                    <img src="https://img.shields.io/badge/Posts-8-brightgreen.svg">
                     <!--
                     <img src="https://img.shields.io/badge/Comments-25-red.svg">
                     -->
