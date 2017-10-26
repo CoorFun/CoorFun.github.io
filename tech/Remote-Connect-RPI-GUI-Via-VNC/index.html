@@ -53,33 +53,55 @@
 
 <div class="article">
   <header>
-    <h2 class="article-title">解决Mac升级Sierra后不能正常休眠的问题</h2>
+    <h2 class="article-title">远程访问Raspberry Pi桌面</h2>
 
  
   </header>
   <span class="article-title-span">
-  <i class="fa fa-calendar" aria-hidden="true"></i> Wed 22 March 2017
+  <i class="fa fa-calendar" aria-hidden="true"></i> Sun 26 November 2017
   </span>
 
   <div class="entry-content">
-    <h2>问题</h2>
-<p>升级Sierra快一个月了，经常每天早上翻开显示屏，发现下面的键盘竟然是热的。于是开始怀疑是不是Mac没有进入休眠模式，检查了设置中的电源设置后，发现一切正常，Mac应该在合上盖子的2分钟后进入休眠状态。于是百度之，发现很多从OS X升级到Sierra的用户都存在类似问题。经过排查，发现问题的出现是源于系统升级后电源管理设置参数的改变，导致触发了系统bug，于是Mac无法正常进入休眠状态。</p>
-<p>我的Mac版本如下</p>
-<p><img alt="image" src="http://coorfun.com/tech/Mac-Sierra-Sleep-Bug/version.png"></p>
-<p>如果在命令行输入</p>
+    <h2>前言</h2>
+<p>最近在翻译“Learn Electronics with Raspberry Pi”一书时，需要截取一些中文Raspbian的截图。一般RPI的访问方式有三种：直接键盘鼠标和显示器；通过SSH；通过VNC。</p>
+<p>SSH只能够实现终端的远程交互，而无法载入用户界面，所以无法截图。而如果直接连接鼠标键盘，那么截图和将截图转移到日常使用的PC上则非常困难。这时候我决定使用VNC远程访问RPI的桌面，这样在我日常使用的PC上就可以使用截图工具直接截图，极大提高了工作效率。</p>
+<h2>什么是VNC</h2>
+<p>VNC是Virtual Network Computing的缩写，顾名思义，它就是虚拟网络计算的意思。更加准确的说，这是一款软件，而不是一种协议的名称。VNC可以实现不同操作系统的远程桌面连接，在实际使用过程中，通常需要在目标主机上安装一个VNC服务器，在控制主机上安装VNC客户端。</p>
+<h2>在Raspberry Pi上安装VNC服务器</h2>
+<p>在安装VNC服务器时，由于还无法实现远程的桌面访问，可以通过串口/局域网SSH的方式访问RPi。然后安装VNC软件包。</p>
 <blockquote>
-<p>$ pmset -g custom</p>
+<p>$ sudo apt-get install tightvncserver</p>
 </blockquote>
-<p>我们会得到以下信息，请大家重点注意红框所选中区域中的信息</p>
-<p><img alt="image" src="http://coorfun.com/tech/Mac-Sierra-Sleep-Bug/terminal.jpeg"></p>
-<p>这张图中的信息为正常情况，在Battery Power设置下（使用电池模式），displaysleep是显示屏息屏时间，sleep是进入休眠时间，disksleep是磁盘进入休眠状态的时间。如果你的Mac不能够正常的进入休眠模式，那么一定是displaysleep的时间大于了sleep的时间，导致系统无法正常进入休眠。</p>
-<p>同理AC Power设置下（使用电源适配器）的三个参数，displaysleep，sleep和disksleep如果出现displaysleep值大于sleep值时，系统一样无法正常进入休眠模式。</p>
-<p>上图为已经恢复正常的参数，在之前我的displaysleep为2，sleep为1。</p>
-<p>据了解导致这个问题的原因是系统升级后原用户设置参数被修改，导致该问题。</p>
-<h2>解决方案</h2>
-<p>这三个参数无法在命令行直接修改，但我们可以进入设置中的电源设置，分别在电池模式和电源适配器模式下，将休眠时间重新修改至一个新值，关闭窗口，然后再次进入，再将其设置回我们所需要的配置即可（该过程刷新了系统参数文件）。此时回到命令行，输入<code>pmset -g custom</code>，观察一下displaysleep和sleep的参数，此时应该是相等的了。</p>
-<p><img alt="image" src="http://coorfun.com/tech/Mac-Sierra-Sleep-Bug/battery.png"></p>
-<p><img alt="image" src="http://coorfun.com/tech/Mac-Sierra-Sleep-Bug/AC.png"></p>
+<p>安装完成后，首次运行需要设置一个访问密码和只读密码，后者不是必须。之后在每次使用VNC客户端连接之前，需要手动开启VNC服务。</p>
+<blockquote>
+<p>$ tightvncserver</p>
+</blockquote>
+<p>`
+pi@raspberrypi:~ $ tightvncserver</p>
+<p>New 'X' desktop is raspberrypi:3</p>
+<p>Starting applications specified in /home/pi/.vnc/xstartup
+Log file is /home/pi/.vnc/raspberrypi:3.log
+`</p>
+<p>运行结果如图所示，rasoberrypi:3表示当前开启了第三个会话，在使用vnc客户端连接时，需要此参数。默认情况下会话编号会从1开始，然后每次运行会依次增加。因为我已经开启了2个，所以这次运行就是3。</p>
+<p>如果想要为远程桌面设置指定的分辨率和显示参数，可以通过如下命令(x表示希望使用的会话编号)：</p>
+<blockquote>
+<p>$ vncserver:x -geometry 1200×600 -depth 16 -pixelformat rgb565</p>
+</blockquote>
+<p>`
+pi@raspberrypi:~ $ vncserver :2 -geometry 1366x768 -depth 16 -pixelformat rgb565</p>
+<p>New 'X' desktop is raspberrypi:2</p>
+<p>Starting applications specified in /home/pi/.vnc/xstartup
+Log file is /home/pi/.vnc/raspberrypi:2.log
+`</p>
+<h2>不同系统的VNC客户端</h2>
+<ul>
+<li>Windows 有自带的远程桌面访问功能，直接访问即可。</li>
+<li>Mac和其它平台，可以使用<a href="https://www.realvnc.com/en/connect/download/viewer/">VNC Viewer</a>。</li>
+</ul>
+<p>下载后使用当前RPi的网络IP和会话编号访问。</p>
+<p>最终效果如图：</p>
+<p><img alt="图1" src="http://coorfun.com/tech/Remote-Connect-RPI-GUI-Via-VNC/1.png"></p>
+<p><img alt="图2" src="http://coorfun.com/tech/Remote-Connect-RPI-GUI-Via-VNC/2.png"></p>
   </div><!-- /.entry-content -->
   
     <div class="comments">
@@ -87,8 +109,8 @@
       <div id="disqus_thread"></div>
       <script type="text/javascript">
         var disqus_shortname = 'coorfangs-blog';
-        var disqus_identifier = 'tech/Mac-Sierra-Sleep-Bug/';
-        var disqus_url = ' https://coorfun.com/tech/Mac-Sierra-Sleep-Bug/';
+        var disqus_identifier = 'tech/Remote-Connect-RPI-GUI-Via-VNC/';
+        var disqus_url = ' https://coorfun.com/tech/Remote-Connect-RPI-GUI-Via-VNC/';
         (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
         dsq.src = '//coorfangs-blog.disqus.com/embed.js';
