@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>CoorFang's Blog</title>
+    <!--for debugging
+    <meta http-equiv="cache-control" content="no-cache,no-store, must-revalidate" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />-->
+
+    <link rel="stylesheet" href=" https://coorfun.com/theme/css/style.css">
+    <link rel="stylesheet" href=" https://coorfun.com/theme/css/md.css">
+    <link rel="stylesheet" href=" https://coorfun.com/theme/css/font-awesome.css" type="text/css">
+    <link rel="stylesheet" href=" https://coorfun.com/theme/css/font-awesome.min.css" type="text/css">
+</head>
+
+<body>
+    <div id="container-top">
+        <div id="top-nav">
+            <nav class="function">
+            </nav>
+            <nav class="social">
+                    <li><a href="https://github.com/CoorFun/">
+                    <i class="fa fa-github" aria-hidden="true"></i></a></li>
+                    <li><a href="http://weibo.com/1847796960/">
+                    <i class="fa fa-weibo" aria-hidden="true"></i></a></li>
+                    <li><a href="https://www.instagram.com/coorfang/">
+                    <i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+            </nav>
+        </div>
+    </div>
+    <div id="container-banner">
+        <div id="profile">
+            
+        </div>
+        <div id="subtitle">
+            <p>方可 / Coor Fang</p>
+            <p>Graduate @ISEP/ Hardwear Engineer @NXEZ</p>
+        </div>
+    </div>
+    <div id="container-body">
+        <div id="container-main">
+            <div id="main-nav">
+                <nav>
+                    <li><a href=""><i class="fa fa-search" aria-hidden="true"></i></a></li>
+                    <li ><a href=" https://coorfun.com">All</a></li>
+                    <li><a href=" https://coorfun.com/category/art.html">Art</a></li>
+                    <li><a href=" https://coorfun.com/category/misc.html">Misc</a></li>
+                    <li class="active"><a href=" https://coorfun.com/category/project.html">Project</a></li>
+                    <li><a href=" https://coorfun.com/category/tech.html">Tech</a></li>
+                </nav>
+            </div>
+
+<div class="article">
+  <header>
+    <h2 class="article-title">Twin Tower Hanoi in ASM</h2>
+
+ 
+  </header>
+  <span class="article-title-span">
+  <i class="fa fa-calendar" aria-hidden="true"></i> Mon 01 May 2017
+  </span>
+
+  <div class="entry-content">
+    <h2>Introduction</h2>
+<p>The main propose of this project is to achieve a set of assembly instructions which can solve the Twin-Tower-Hanoi Game. This report mainly talk about how I step by step finished the code and the main issues I found during the project running. Finally I will propose my conclusion and feelings about this project.</p>
+<h2>Way to Learn</h2>
+<p>The first step I took is to understand the question ‘How does the iteration algorithm work?’. The best way to figure out this theory is to realise an algorithm to solve the Single Tower Hanoi Game.</p>
+<p>After amount of time of thinking, it occurs to me that there are mainly 3 steps to finish a single hanoi puzzle: Move N-1 dishes to temporary pile, move the lowest one to destination, move the N-1 dishes from temporary to destination. As long as the lowest dish had been moved, the question becomes exactly alike the original one. The only difference between is N becomes N-1. So, that’s why only one function needed to solve the single tower game.</p>
+<p>In a similar way, all the functions provided to solve twin tower game follow the same principle. When we completely understand the scenario provided for twin tower game, it also becomes easier to translate it into assembly code.</p>
+<h2>Difficulities &amp; Solutions</h2>
+<p>During the translation, I mainly met three problems which can be concluded as following.</p>
+<h3>I. Map A, B and C with 0, 1 and 2</h3>
+<p>In the C language, we can easily use characters to represent different piles. But for assembly language, only numbers can be accepted. So I made a dual-step checking to decide which move should be executed.</p>
+<h3>II. Parameter mix up when iterate</h3>
+<p>In assembly language, each parameter is passed via register when a procedure call has been made. So to keep the parameter in the original order when a in-function call complete, it’s necessary to push the previous parameters into stack and pop out when sub procedure finish.</p>
+<div class="highlight"><pre><span></span><span class="n">cons</span><span class="o">:</span>       <span class="n">addi</span>    <span class="n">r27</span><span class="o">,</span>    <span class="n">r27</span><span class="o">,</span>    <span class="o">-</span><span class="mi">20</span>
+                <span class="n">stw</span>     <span class="n">r31</span><span class="o">,</span>    <span class="mi">0</span><span class="o">(</span><span class="n">r27</span><span class="o">)</span>          <span class="err">#</span> <span class="k">return</span> <span class="n">address</span>
+                <span class="n">stw</span>     <span class="n">r4</span><span class="o">,</span>     <span class="mi">4</span><span class="o">(</span><span class="n">r27</span><span class="o">)</span>          <span class="err">#</span> <span class="n">N</span>
+                <span class="n">stw</span>     <span class="n">r5</span><span class="o">,</span>     <span class="mi">8</span><span class="o">(</span><span class="n">r27</span><span class="o">)</span>          <span class="err">#</span> <span class="n">src</span>
+                <span class="n">stw</span>     <span class="n">r6</span><span class="o">,</span>     <span class="mi">12</span><span class="o">(</span><span class="n">r27</span><span class="o">)</span>         <span class="err">#</span> <span class="n">dst</span>
+                <span class="n">stw</span>     <span class="n">r7</span><span class="o">,</span>     <span class="mi">16</span><span class="o">(</span><span class="n">r27</span><span class="o">)</span>         <span class="err">#</span> <span class="n">tmp</span>
+
+                <span class="n">beq</span>     <span class="n">r4</span><span class="o">,</span> <span class="n">r24</span><span class="o">,</span> <span class="n">con1</span>           <span class="err">#</span> <span class="k">if</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+
+
+<h3>III. Difficult to debug</h3>
+<p>Since the code has amount of iterations and stack operations, it becomes difficult to set breakout points. So I used Xcode to list out all the iterations so that I can know the value of N and the order of parameters(Pile). With these clear information, I finally executed the code successfully.</p>
+<h2>Conclusion</h2>
+<p>The significant challenge of this project is to clearly understand the iteration and work it out in assembly language. After completed this project, I realised that assembly code is not that difficult to understand but it’s actually difficult to code, because of its heavy work for a simple task. But another thing I want to point out is, although the assembly language is not easy to program, but it can definitely make a specific task as optimised as possible and compactly hardware associated.</p>
+<h2>Source code &amp; References</h2>
+<p><a href="https://github.com/CoorFun/Twin-Tower-Hanoi">Source Code</a></p>
+  </div><!-- /.entry-content -->
+  
+    <div class="comments">
+      <h2>Comments !</h2>
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_shortname = 'coorfangs-blog';
+        var disqus_identifier = 'project/Twin-Tower-Hanoi-In-ASM/';
+        var disqus_url = ' https://coorfun.com/project/Twin-Tower-Hanoi-In-ASM/';
+        (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//coorfangs-blog.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the comments.</noscript>
+    </div>
+</div>
+            <div id="footer">
+                <p>
+                    <img src="https://img.shields.io/badge/Posts-10-brightgreen.svg">
+                    <!--
+                    <img src="https://img.shields.io/badge/Comments-25-red.svg">
+                    -->
+                </p>
+                <p>
+                    <img src="https://img.shields.io/badge/Hosted-GitHub-orange.svg">
+                    <img src="https://img.shields.io/badge/Power by-Pelican-green.svg">
+                    <img src="https://img.shields.io/badge/Photo service-Flickr-blue.svg">
+                </p>
+                <p>
+                    <a href="https://github.com/CoorFun/Pelican-Customize-Theme"><img src="https://img.shields.io/badge/Version-1.0-ff69b4.svg"></a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <!--Contents-->
+<script type="text/javascript">
+    var disqus_shortname = 'coorfangs-blog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>
