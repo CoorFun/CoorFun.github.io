@@ -53,7 +53,7 @@
 
 <div class="article">
   <header>
-    <h2 class="article-title">解决eclipse运行时‘exit=0’错误</h2>
+    <h2 class="article-title">解决eclipse运行时[exit=1’]错误</h2>
 
  
   </header>
@@ -64,8 +64,19 @@
   <div class="entry-content">
     <h2>问题</h2>
 <p>Windows 10 64位操作系统，在运行Eclipse时出现如下信息。</p>
-<p><code>Java was started but returned exit code=1
-C:\Program File (x86)\Java\</code></p>
+<p><img alt="图1" src="http://coorfun.com/tech/Run-Eclipse-Error-Exit0/1.png"></p>
+<p>查了很多资料后，有人说是没有在eclipse的配置文件‘eclipse.ini’中指明JVM路径，需要加入：</p>
+<div class="highlight"><pre><span></span>-vm
+C:\Program Files (x86)\Java\jdk1.7.0_25\bin\javaw.exe
+</pre></div>
+
+
+<p>但是实际情况是加入后仍然出现该问题，只是错误提示中的JVM路径改变为了设置路径。</p>
+<h2>解决</h2>
+<p>实际这个问题是因为eclipse是64位，而使用了32位的JVM。而实际在Oracle的默认jvm安装程序中，虽然计算机系统为64位，但是还是默认将虚拟机安装在了<code>\Program Files (x86)\</code>路径下。</p>
+<p>所以只需要在重新安装时，手动选择安装地址，将其安装在<code>\Program Files\</code>目录下即可。</p>
+<p>安装后可以在eclipse.ini中重新指定该路径，或者可以直接将这部分内容删除。</p>
+<p>现在eclipse应该可以正常运行。</p>
   </div><!-- /.entry-content -->
   
     <div class="comments">
