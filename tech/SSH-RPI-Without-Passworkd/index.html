@@ -78,14 +78,14 @@
 <p>id_rsa      id_rsa.pub      known_hosts</p>
 </blockquote>
 <p>前两个文件的存在说明本地已经有生成过秘钥对。</p>
-<p>如果结果中没有id_rsa文件和id_rsa.pub文件，则说明本地还没有，使用如下命令生成：</p>
+<p>如果结果中没有<code>id_rsa</code>文件和<code>id_rsa.pub</code>文件，则说明本地还没有，使用如下命令生成：</p>
 <blockquote>
 <p>$ ssh-keygen -t rsa -C coor@pi </p>
 </blockquote>
-<p>该命令中的coor@pi是这个秘钥的标记信息，coor是我的名字，pi是设备信息。</p>
+<p>该命令中的<code>coor@pi</code>是这个秘钥的标记信息，<code>coor</code>是我的名字，<code>pi</code>是设备信息。</p>
 <p>接下来会提示秘钥的保存地址，直接使用默认即可。</p>
 <p>如果担心私钥被人复制后冒充你的身份进行访问，可以给秘钥设置一个密码。</p>
-<p>秘钥生成后，再次检查~/.ssh目录下的文件：</p>
+<p>秘钥生成后，再次检查<code>~/.ssh</code>目录下的文件：</p>
 <blockquote>
 <p>$ ls ~/.ssh</p>
 </blockquote>
@@ -99,7 +99,7 @@
 </blockquote>
 <p>公钥应该是由一串复杂的字符组成，该段字符以<code>ssh-rsa</code>开头，并以<code>coor@pi</code>结尾。</p>
 <h2>将公钥复制到RPi</h2>
-<p>首先登录到Raspberry Pi，检查~/.ssh目录下是否有一个名为<code>authorized_keys</code>的文件，如果没有则建立该文件：</p>
+<p>首先登录到Raspberry Pi，检查<code>~/.ssh</code>目录下是否有一个名为<code>authorized_keys</code>的文件，如果没有则建立该文件：</p>
 <blockquote>
 <p>$ mkdir authorized_keys</p>
 </blockquote>
