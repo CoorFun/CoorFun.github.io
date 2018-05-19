@@ -54,30 +54,64 @@
 
 <div class="article">
   <header>
-    <h2 class="article-title">解决eclipse运行时[exit code=1]错误</h2>
+    <h2 class="article-title">无密码SSH登录Raspberry Pi</h2>
 
  
   </header>
   <span class="article-title-span">
-  <i class="fa fa-calendar" aria-hidden="true"></i> Mon 16 October 2017
+  <i class="fa fa-calendar" aria-hidden="true"></i> Sat 19 May 2018
   </span>
 
   <div class="entry-content">
-    <h2>问题</h2>
-<p>Windows 10 64位操作系统，在运行Eclipse时出现如下信息。</p>
-<p><img alt="图1" src="http://coorfun.com/tech/Run-Eclipse-Error-Exit0/1.png"></p>
-<p>查了很多资料后，有人说是没有在eclipse的配置文件‘eclipse.ini’中指明JVM路径，需要加入：</p>
-<div class="highlight"><pre><span></span>-vm
-C:\Program Files (x86)\Java\jdk1.7.0_25\bin\javaw.exe
-</pre></div>
-
-
-<p>但是实际情况是加入后仍然出现该问题，只是错误提示中的JVM路径改变为了设置路径。</p>
-<h2>解决</h2>
-<p>实际这个问题是因为eclipse是64位，而使用了32位的JVM。而实际在Oracle的默认jvm安装程序中，虽然计算机系统为64位，但是还是默认将虚拟机安装在了<code>\Program Files (x86)\</code>路径下。</p>
-<p>所以只需要在重新安装时，手动选择安装地址，将其安装在<code>\Program Files\</code>目录下即可。</p>
-<p>安装后可以在eclipse.ini中重新指定该路径，或者可以直接将这部分内容删除。</p>
-<p>现在eclipse应该可以正常运行。</p>
+    <h2>概述</h2>
+<p>最近遇到一些需要在Mac上写程序，然后在Raspberry Pi上调试的情况。以往的做法都是在Mac上将程序的框架搭好，然后通过SSH在Pi上新建文件，复制代码内容，保存后开始调试。如果遇到问题，则在Raspberry Pi上使用Nano编辑器打开并修改。</p>
+<p>但这样做显然带来了两个问题，1.Mac和RPi上的程序不同步；2.在命令行中编辑程序时效率低下。</p>
+<p>最近发现新的工作流程是，始终在Mac上编辑程序代码，保存后使用scp命令将文件上传到Raspberry Pi，然后再在终端的SSH中运行调试。由于scp是基于ssh的方式传输文件的，所以每次上传都需要输入密码。于是想到是否有一种方法可以使用无密方式登录Raspberry Pi。</p>
+<h2>SSH Key</h2>
+<p>分别将SSH Key的公钥和私钥放在Raspberry Pi上和本地，即可实现。</p>
+<p>首先检查本地是否已经有生成过的秘钥对。</p>
+<blockquote>
+<p>$ ls ~/.ssh</p>
+</blockquote>
+<p>如果结果显示：</p>
+<blockquote>
+<p>id_rsa      id_rsa.pub      known_hosts</p>
+</blockquote>
+<p>前两个文件的存在说明本地已经有生成过秘钥对。</p>
+<p>如果结果中没有id_rsa文件和id_rsa.pub文件，则说明本地还没有，使用如下命令生成：</p>
+<blockquote>
+<p>$ ssh-keygen -t rsa -C coor@pi </p>
+</blockquote>
+<p>该命令中的coor@pi是这个秘钥的标记信息，coor是我的名字，pi是设备信息。</p>
+<p>接下来会提示秘钥的保存地址，直接使用默认即可。</p>
+<p>如果担心私钥被人复制后冒充你的身份进行访问，可以给秘钥设置一个密码。</p>
+<p>秘钥生成后，再次检查~/.ssh目录下的文件：</p>
+<blockquote>
+<p>$ ls ~/.ssh</p>
+</blockquote>
+<p>此时应该就有三个文件</p>
+<blockquote>
+<p>id_rsa      id_rsa.pub      known_hosts</p>
+</blockquote>
+<p>其中，id_rsa.pub是公钥，查看一下其中的内容：</p>
+<blockquote>
+<p>$ cat ~/.ssh/id_rsa.pub</p>
+</blockquote>
+<p>公钥应该是由一串复杂的字符组成，该段字符以<code>ssh-rsa</code>开头，并以<code>coor@pi</code>结尾。</p>
+<h2>将公钥复制到RPi</h2>
+<p>首先登录到Raspberry Pi，检查~/.ssh目录下是否有一个名为<code>authorized_keys</code>的文件，如果没有则建立该文件：</p>
+<blockquote>
+<p>$ mkdir authorized_keys</p>
+</blockquote>
+<p>有了该文件，返回到本地，使用如下命令将公钥复制到Raspberry Pi：</p>
+<blockquote>
+<p>$ cat ~/.ssh/id_rsa.pub | ssh <USERNAME>@<IP-ADDRESS> 'cat &gt;&gt; .ssh/authorized_keys'</p>
+</blockquote>
+<p>或者也可以使用scp命令复制：</p>
+<blockquote>
+<p>$ scp ~/.ssh/id_rsa.pub <USERNAME>@<IP-ADDRESS>:.ssh/autorized_keys</p>
+</blockquote>
+<p>执行该命令时需要输入登录Pi的密码，但只要复制完成，以后就可以直接ssh登录到Pi了。</p>
   </div><!-- /.entry-content -->
   
 </div>
